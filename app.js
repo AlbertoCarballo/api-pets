@@ -17,7 +17,7 @@ var problemasRouter = require('./routes/ProblemasPaginas');
 var adoptarRouter = require('./routes/CartaAdopcion');
 var catalogoAdopcionesRouter = require('./routes/CatalogoAdopciones');
 var catalogoReportesRouter= require('./routes/ReportesMaltrato');
-var isLoggedRouter = require('./routes/isValidToken');
+var isLoggedRouter = require('./routes/IsValidToken');
 
 var app = express();
 
