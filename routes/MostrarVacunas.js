@@ -61,7 +61,7 @@ router.get('/:idMascota', obtenerUsuario, async function (req, res, next) {
     let idMascota=req.params.idMascota;
     try {
         const { idUser } = req.body;
-        const [rows] = await connection.query('select * from mascota where usuario_id=?', [idUser]);
+        const [rows] = await connection.query('select * from vacunaMascota as vm join vacunasDisponibles as vd on vm.vacuna = vd.id_vacuna where vm.mascota_id=?', [idMascota]);
         if (rows.length === 0) {
             return res.status(204).json({ status: 204, message: "No Users found" });
         }

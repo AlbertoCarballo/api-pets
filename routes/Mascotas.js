@@ -57,9 +57,11 @@ router.get('/', obtenerUsuario, async function (req, res, next) {
 
 });
 
-router.post('/', async function (req, res, next) {
+router.post('/',obtenerUsuario, async function (req, res, next) {
     try {
-        const { idUser, petName, typeOfPet, age, photo, race } = req.body;
+        const { idUser } = req.body;
+        const { petName, typeOfPet, age, photo, breed } = req.body.form;
+        console.log(req.body);
         //          { "idUser": "1",
         // "petName": "rito", 
         // "typeOfPet": "perro", 
@@ -67,11 +69,12 @@ router.post('/', async function (req, res, next) {
         // "photo":"insertar foto",
         // "race": "french puddle"
         // }
-        if (!idUser || !petName || !typeOfPet || !age || !photo || !race) {
+        if (!idUser || !petName || !typeOfPet || !age || !photo || !breed) {
             return res.status(400).json({ status: 400, message: "Invalid request data" });
         }
-        const [result] = await connection.query('insert into mascota (usuario_id,nombre_mascota,tipo_mascota,edad,foto,raza)values(?, ?, ?, ?, ?, ?)', [idUser, petName, typeOfPet, age, photo, race]);
-        res.status(200).json({ status: 200, message: "Item created successfully", data: { id: result.insertId, idUser, petName, typeOfPet, age, photo, race } });
+        console.log("sali");
+        const [result] = await connection.query('insert into mascota (usuario_id,nombre_mascota,tipo_mascota,edad,foto,raza)values(?, ?, ?, ?, ?, ?)', [idUser, petName, typeOfPet, age, photo, breed]);
+        res.status(200).json({ status: 200, message: "Item created successfully", data: { id: result.insertId, idUser, petName, typeOfPet, age, photo, breed } });
     } catch (err) {
         res.status(500).json({ status: 500, message: err.message });
     }

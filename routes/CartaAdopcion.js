@@ -1,12 +1,12 @@
 var express = require('express');
 const connection = require('../config/db');
 var router = express.Router();
-const jwt=require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 /* GET users listing. */
 router.get('/', async function (req, res, next) {
     try {
-        const [rows] = await connection.query('select * from adopciones');
+        const [rows] = await connection.query('select * from adopciones ');
         if (rows.length === 0) {
             return res.status(204).json({ status: 204, message: "No Users found" });
         }
@@ -18,25 +18,24 @@ router.get('/', async function (req, res, next) {
 });
 
 function obtenerUsuario(req, res, next) {
-    if(req.body.token){
-        jwt.verify(req.body.token, "asd123",(error,data) => {
+    if (req.body.token) {
+        jwt.verify(req.body.token, "asd123", (error, data) => {
             if (error) {
                 console.log(error);
                 res.sendStatus(403);
-            }else{
-                req.body.idUser=data.id_usuario;
-                req.body.username=data.nombre+" "+data.primer_apellido+" "+data.segundo_apellido;
-                req.body.nacimiento=data.fecha_nac;
+            } else {
+                req.body.idUser = data.id_usuario;
+                req.body.username = data.nombre + " " + data.primer_apellido + " " + data.segundo_apellido;
             }
         });
         next();
-    }else{
+    } else {
         res.sendStatus(403);
     };
 };
 
-router.post('/',obtenerUsuario , async function (req, res, next) {
-    
+router.post('/', obtenerUsuario, async function (req, res, next) {
+
     try {
         console.log(req.body);
         const { idUser, idPetCatalog, username, petName, petType, race, photo } = req.body;
@@ -48,14 +47,15 @@ router.post('/',obtenerUsuario , async function (req, res, next) {
         // "race": "pastor aleman",
         // "photo": "inserte foto"
         // }
+        console.log(req.body);
         if (!idUser || !idPetCatalog || !username || !petName || !petType || !race || !photo) {
             return res.status(400).json({ status: 400, message: "Invalid request data" });
         }
-        
+        console.log("sali");
         const [result] = await connection.query('insert into adopciones (id_usuario,id_catalgo_mascota,nombre_usuario,nombre_mascota,tipo_mascota,raza, foto)values(?, ?, ?, ?, ?, ?, ?)', [idUser, idPetCatalog, username, petName, petType, race, photo]);
-        res.status(200).json({ status: 200, message: "Item created successfully", data: { id: result.insertId, idUser, idPetCatalog, username, petName, petType, race, photo } });
-        const [update]= await connection.query('UPDATE catalogoAdopciones SET estado = \'adoptado\' WHERE id_catalogo= ?',[idPetCatalog]);
-        res.status(200).json({ status: 200, message: "actualizacion hecha", data: { id: update.insertId, idPetCatalog } });
+        // res.status(200).json({ status: 200, message: "Item created successfully", data: { id: result.insertId, idUser, idPetCatalog, username, petName, petType, race, photo } });
+        const [update] = await connection.query('UPDATE catalogoAdopciones SET estado = \'adoptado\' WHERE id_catalogo= ?', [idPetCatalog]);
+        res.status(200).json({ status: 200, message: "actualizacion e insercion hecha", data: { id: update.insertId, idPetCatalog } });
     } catch (err) {
         res.status(500).json({ status: 500, message: err.message });
     }

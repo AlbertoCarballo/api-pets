@@ -6,7 +6,7 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/', async function (req, res, next) {
     try {
-        const [rows] = await connection.query('select * from catalogoAdopciones');
+        const [rows] = await connection.query('select * from catalogoAdopciones where estado =\'en adopción\'');
         if (rows.length === 0) {
             return res.status(204).json({ status: 204, message: "No Users found" });
         }
