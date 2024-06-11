@@ -39,7 +39,6 @@ router.post('/',obtenerUsuario , async function (req, res, next) {
     
     try {
         console.log(req.body);
-        return res.status(400).json({ status: 400, message: "Invalid request data" });
         const { idUser, idPetCatalog, username, petName, petType, race, photo } = req.body;
         //          { "idUser": "1",
         // "idPetCatalog": "1", 
