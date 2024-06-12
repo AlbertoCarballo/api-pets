@@ -20,6 +20,9 @@ var catalogoReportesRouter= require('./routes/ReportesMaltrato');
 var isLoggedRouter = require('./routes/IsValidToken');
 var verUsuarioRouter = require('./routes/MostrarUsuario');
 var verVacunasRouter = require('./routes/MostrarVacunas');
+var VerAdopcionesRouter = require('./routes/MostrarAdopciones');
+var VerMaltratosRouter = require('./routes/MostrarMaltratos');
+var VerExtraviosRouter = require('./routes/MostrarExtravios');
 
 var app = express();
 
@@ -49,6 +52,9 @@ app.use('/reportar',catalogoReportesRouter);
 app.use('/loggear',isLoggedRouter);
 app.use('/ver-user',verUsuarioRouter);
 app.use('/vacunas-mascotas',verVacunasRouter);
+app.use('/ver-adopciones',VerAdopcionesRouter);
+app.use('/ver-maltratos',VerMaltratosRouter);
+app.use('/ver-extravios',VerExtraviosRouter);
 
 // catch 404 and forward to error handler//
 app.use(function (req, res, next) {

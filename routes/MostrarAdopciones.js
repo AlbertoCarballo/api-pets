@@ -1,7 +1,6 @@
 var express = require('express');
 const connection = require('../config/db');
 var router = express.Router();
-
 const jwt = require('jsonwebtoken');
 
 function obtenerUsuario(req, res, next) {
@@ -40,10 +39,12 @@ function obtenerUsuario(req, res, next) {
     }
 
 };
+
 /* GET users listing. */
-router.get('/',  async function (req, res, next) {
+router.get('/', obtenerUsuario, async function (req, res, next) {
     try {
-        const [rows] = await connection.query('select * from incidenciasConAplicacion');
+        const { idUser } = req.body
+        const [rows] = await connection.query('select * from reporteAdopciones where id_usuario=?', [idUser]);
         if (rows.length === 0) {
             return res.status(204).json({ status: 204, message: "No Users found" });
         }
@@ -52,27 +53,6 @@ router.get('/',  async function (req, res, next) {
         res.status(500).json({ status: 500, message: err.message });
     }
 
-});
-
-router.post('/', obtenerUsuario, async function (req, res, next) {
-    try {
-        const {idUser, username} =req.body;
-        const {description } = req.body.form;
-        //          { "idUser": "1",
-        // "username": "asd", 
-        // "dod": "2024-06-15", 
-        // "description": "juan"
-        // }
-        console.log(req.body);
-        if (!idUser || !username ||  !description) {
-            return res.status(400).json({ status: 400, message: "Invalid request data" });
-        }
-        const [result] = await connection.query('insert into incidenciasConAplicacion (id_usuario,nombre_usuario,descripcion) values(?, ?, ?)', [idUser, username, description]);
-        res.status(200).json({ status: 200, message: "Item created successfully", data: { id: result.insertId, idUser, username, description } });
-    } catch (err) {
-        console.log("hola", err);
-        res.status(500).json({ status: 500, message: err.message });
-    }
 });
 
 module.exports = router;
